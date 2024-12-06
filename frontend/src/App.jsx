@@ -1,5 +1,11 @@
-import { Button } from "flowbite-react";
+import { Component } from "./components/navbar";
+import PublicRoutes from "./routes/PublicRoutes";
+
 
 export default function App() {
-  return <Button  className="border">Click me</Button>;
+  return( <>
+   <Component/>
+   <PublicRoutes/>
+  </>
+  )
 }
