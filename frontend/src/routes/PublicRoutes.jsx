@@ -4,6 +4,7 @@ import Login from '../pages/Login/Login'
 import SignUp from '../pages/SignUp/SignUp'
 import DashBoard from '../pages/dashboard/dashboard'
 import PrivateRoutes from '../components/PrivateRoutes'
+import AboutUs from '../pages/AboutUs/AboutUs'
 
 const PublicRoutes = () => {
   return (
@@ -13,6 +14,7 @@ const PublicRoutes = () => {
         <Route path="/signup" element={<SignUp />} />
         <Route element={<PrivateRoutes/>}>
         <Route path="/dashboard" element={<DashBoard />} />
+        <Route path="/about-us" element={<AboutUs/>} />
         </Route>
      </Routes>
      </>

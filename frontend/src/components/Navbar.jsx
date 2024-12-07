@@ -3,14 +3,18 @@
 
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
 import logo from '../assets/Icons/adoption.png'
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import apiClient from "../utils/apiClient";
 import { signoutSuccess } from "../redux/user/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export function Component() {
 
   const dispatch =  useDispatch()
+  const {currentUser} = useSelector((state) => state?.user);
+  const location = useLocation();
+
+  const isActive = (path) => location.pathname === path
 
   const handleSignout = async() => {
        try {
@@ -31,7 +35,7 @@ export function Component() {
         <img src={logo} className="mr-3 h-6 sm:h-9" alt="Flowbite React Logo" />
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">Stray Help</span>
       </Navbar.Brand>
-      <div className="flex md:order-2 gap-5 items-center">
+      {currentUser && (<div className="flex md:order-2 gap-5 items-center">
          <Link to='/login'><p className="text-center text-white cursor-pointer">Login</p></Link>
         <Dropdown
           arrowIcon={false}
@@ -41,8 +45,8 @@ export function Component() {
           }
         >
           <Dropdown.Header>
-            <span className="block text-sm">Bonnie Green</span>
-            <span className="block truncate text-sm font-medium">name@flowbite.com</span>
+            <span className="block text-sm">{currentUser?.name}</span>
+            <span className="block truncate text-sm font-medium">{currentUser?.email}</span>
           </Dropdown.Header>
           <Dropdown.Item>Dashboard</Dropdown.Item>
           <Dropdown.Item>Settings</Dropdown.Item>
@@ -51,13 +55,13 @@ export function Component() {
           <Dropdown.Item onClick={handleSignout}>Sign out</Dropdown.Item>
         </Dropdown>
         <Navbar.Toggle />
-      </div>
+      </div>) }
       
       <Navbar.Collapse>
-        <Navbar.Link href="#" active>
+        <Navbar.Link href="" active={isActive('/')}>
           Home
         </Navbar.Link>
-        <Navbar.Link href="#">About</Navbar.Link>
+        <Navbar.Link href="/about-us" active={isActive('/about-us')}>About</Navbar.Link>
         <Navbar.Link href="#">Services</Navbar.Link>
         <Navbar.Link href="#">Pricing</Navbar.Link>
         <Navbar.Link href="#">Contact</Navbar.Link>
