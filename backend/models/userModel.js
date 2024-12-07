@@ -64,4 +64,6 @@ const UserSchema = new Schema({
 
 UserSchema.index({ location: "2dsphere" });
 
-export default model("User", UserSchema);
+const User = model("User", UserSchema);
+
+export default User

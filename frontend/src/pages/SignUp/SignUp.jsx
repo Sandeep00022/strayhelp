@@ -1,10 +1,13 @@
 "use client";
 import React, { useState } from "react";
-import { FloatingLabel, Button } from "flowbite-react";
-
+import { FloatingLabel, Button, Alert, Spinner } from "flowbite-react";
+import {useNavigate} from 'react-router-dom'
+import apiClient from "../../utils/apiClient";
 const SignUp = () => {
   const [location, setLocation] = useState({ latitude: "", longitude: "" });
-
+  const [loading, setLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate()
   // Get user's location using Geolocation API
   const getLocation = () => {
     if (navigator.geolocation) {
@@ -25,7 +28,7 @@ const SignUp = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Gather form data
     const formData = {
@@ -35,12 +38,28 @@ const SignUp = () => {
       location,
     };
 
-    console.log("Form Data:", formData);
-    // Send formData to the backend
+    //  put form validation
+    if (!formData.name || !formData.email || !formData.password) {
+      return setErrorMessage("Please fill out all fields");
+    }
+    setLoading(true)
+    try {
+      let res = await apiClient.post('/auth/signup',formData)
+      if (!res.ok) {
+        setLoading(false)
+        throw new Error(res.message);
+      }
+      setLoading(false)
+      navigate('/dashboard')
+    } catch (error) {
+      setLoading(false)
+      setErrorMessage(error?.response?.data?.message);
+    }
   };
 
+  console.log("errorMessage", errorMessage);
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100">
       <form
         className="w-[90%] max-w-lg flex flex-col rounded-lg shadow-lg bg-black p-8"
         onSubmit={handleSubmit}
@@ -48,11 +67,17 @@ const SignUp = () => {
         <div className="flex flex-col items-center mb-8">
           {/* Logo or header */}
           <div className="bg-red-500 p-4 rounded-full">
-            <span role="img" aria-label="paw print" className="text-3xl text-white">
+            <span
+              role="img"
+              aria-label="paw print"
+              className="text-3xl text-white"
+            >
               🐾
             </span>
           </div>
-          <h1 className="text-2xl font-bold text-black mt-4">Join the Community</h1>
+          <h1 className="text-2xl font-bold text-gray-400 mt-4">
+            Join the Community
+          </h1>
           <p className="text-gray-500 text-center mt-2">
             Create your account to start helping animals find homes.
           </p>
@@ -60,12 +85,14 @@ const SignUp = () => {
 
         {/* Full Name */}
         <div className="mt-4">
-          <FloatingLabel name="name"
-           variant="standard"
-            label="Full Name" 
-            required 
+          <FloatingLabel
+            name="name"
+            variant="standard"
+            label="Full Name"
+            required
             className="w-full
-           text-black" />
+           text-black"
+          />
         </div>
 
         {/* Email */}
@@ -95,7 +122,12 @@ const SignUp = () => {
 
         {/* Location */}
         <div className="mt-4">
-          <Button type="button" color="gray" onClick={getLocation} className="w-full">
+          <Button
+            type="button"
+            color="gray"
+            onClick={getLocation}
+            className="w-full"
+          >
             {location.latitude && location.longitude
               ? `Location Captured (${location.latitude}, ${location.longitude})`
               : "Capture Location"}
@@ -104,7 +136,14 @@ const SignUp = () => {
 
         {/* Signup Button */}
         <Button type="submit" color="red" className="mt-6 w-full">
-          Sign Up
+          {loading ? (
+            <>
+              <Spinner size="sm" />
+              <span className="pl-3">Loading...</span>
+            </>
+          ) : (
+            "Sign Up"
+          )}
         </Button>
 
         {/* Login Redirect */}
@@ -115,6 +154,11 @@ const SignUp = () => {
           </a>
         </div>
       </form>
+      {errorMessage && (
+        <Alert className="mt-5 w-[50%] text-center" color={"failure"}>
+          {errorMessage}
+        </Alert>
+      )}
     </div>
   );
 };

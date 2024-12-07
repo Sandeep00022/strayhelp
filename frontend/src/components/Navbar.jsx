@@ -4,8 +4,27 @@
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
 import logo from '../assets/Icons/adoption.png'
 import { Link } from "react-router-dom";
+import apiClient from "../utils/apiClient";
+import { signoutSuccess } from "../redux/user/userSlice";
+import { useDispatch } from "react-redux";
 
 export function Component() {
+
+  const dispatch =  useDispatch()
+
+  const handleSignout = async() => {
+       try {
+          const res = await apiClient.post('/user/sign-out');
+          if(!res?.statusText == "OK"){
+            console.log(res?.data?.message);
+          } else {
+            dispatch(signoutSuccess());
+          }
+       } catch (error) {
+            console.log(error)
+       }
+  }
+
   return (
     <Navbar fluid rounded>
       <Navbar.Brand href="https://flowbite-react.com">
@@ -29,7 +48,7 @@ export function Component() {
           <Dropdown.Item>Settings</Dropdown.Item>
           <Dropdown.Item>Earnings</Dropdown.Item>
           <Dropdown.Divider />
-          <Dropdown.Item>Sign out</Dropdown.Item>
+          <Dropdown.Item onClick={handleSignout}>Sign out</Dropdown.Item>
         </Dropdown>
         <Navbar.Toggle />
       </div>
