@@ -14,8 +14,8 @@ const PublicRoutes = () => {
         <Route path="/signup" element={<SignUp />} />
         <Route element={<PrivateRoutes/>}>
         <Route path="/dashboard" element={<DashBoard />} />
-        <Route path="/about-us" element={<AboutUs/>} />
         </Route>
+        <Route path="/about-us" element={<AboutUs/>} />
      </Routes>
      </>
   )

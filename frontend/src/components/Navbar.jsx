@@ -31,7 +31,7 @@ export function Component() {
 
   return (
     <Navbar fluid rounded>
-      <Navbar.Brand href="https://flowbite-react.com">
+      <Navbar.Brand href="/dashboard">
         <img src={logo} className="mr-3 h-6 sm:h-9" alt="Flowbite React Logo" />
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">Stray Help</span>
       </Navbar.Brand>
@@ -48,7 +48,7 @@ export function Component() {
             <span className="block text-sm">{currentUser?.name}</span>
             <span className="block truncate text-sm font-medium">{currentUser?.email}</span>
           </Dropdown.Header>
-          <Dropdown.Item>Dashboard</Dropdown.Item>
+          <Dropdown.Item href="/dashboard">Dashboard</Dropdown.Item>
           <Dropdown.Item>Settings</Dropdown.Item>
           <Dropdown.Item>Earnings</Dropdown.Item>
           <Dropdown.Divider />
@@ -58,12 +58,10 @@ export function Component() {
       </div>) }
       
       <Navbar.Collapse>
-        <Navbar.Link href="" active={isActive('/')}>
+        <Navbar.Link href="/login" active={isActive('/login')}>
           Home
         </Navbar.Link>
         <Navbar.Link href="/about-us" active={isActive('/about-us')}>About</Navbar.Link>
-        <Navbar.Link href="#">Services</Navbar.Link>
-        <Navbar.Link href="#">Pricing</Navbar.Link>
         <Navbar.Link href="#">Contact</Navbar.Link>
       </Navbar.Collapse>
     </Navbar>
